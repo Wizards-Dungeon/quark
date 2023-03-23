@@ -17,9 +17,9 @@ pub extern crate alloc;
 mod imp;
 use imp::*;
 
-mod v_strings;
 mod antidebug;
 mod editions;
+mod v_strings;
 
 use winapi::um::{processthreadsapi::ExitProcess, synchapi::Sleep};
 

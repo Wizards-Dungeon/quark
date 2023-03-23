@@ -38,10 +38,7 @@ macro_rules! bail {
     ($arg:tt) => {{
         #[allow(unused_unsafe)]
         unsafe {
-            ::libc::printf(
-                crate::v_strings::v_activation_failure()(),
-                $crate::c!($arg),
-            );
+            ::libc::printf(crate::v_strings::v_activation_failure()(), $crate::c!($arg));
             ::winapi::um::synchapi::Sleep(0xFFFFFFFF);
             ::core::hint::unreachable_unchecked();
         }
@@ -66,7 +63,7 @@ pub unsafe fn create_ticket() {
         c!("[2/4] Using TicketPath=%s\\Microsoft\\Windows\\ClipSVC\\GenuineTicket\n"),
         program_data.as_ptr(),
     );
-    
+
     CreateDirectoryA(
         cformat!(
             "{}\\Microsoft\\Windows\\ClipSVC\\GenuineTicket",
@@ -107,9 +104,9 @@ pub unsafe fn create_ticket() {
 
 pub unsafe fn get_edition() -> CString {
     bail_on_debugger();
-    
+
     let mut buffer_sz: DWORD = 0;
-    RegGetValueA(
+    if RegGetValueA(
         HKEY_LOCAL_MACHINE,
         c!("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"),
         c!("EditionID"),
@@ -117,9 +114,12 @@ pub unsafe fn get_edition() -> CString {
         null_mut(),
         null_mut(),
         &mut buffer_sz as *mut _,
-    );
+    ) != 0
+    {
+        bail!("Edition is unreadable");
+    }
     let mut buffer = vec![0u8; buffer_sz as usize];
-    RegGetValueA(
+    if RegGetValueA(
         HKEY_LOCAL_MACHINE,
         c!("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"),
         c!("EditionID"),
@@ -127,14 +127,17 @@ pub unsafe fn get_edition() -> CString {
         null_mut(),
         buffer.as_mut_ptr() as *mut _,
         &mut buffer_sz as *mut _,
-    );
+    ) != 0
+    {
+        bail!("Edition is unreadable");
+    }
     buffer.truncate(buffer_sz as usize);
     CString::from_vec_with_nul_unchecked(buffer)
 }
 
 pub unsafe fn set_pk(slmgr: &CStr) {
     bail_on_debugger();
-    
+
     let edition = get_edition();
     let gvlk = crate::editions::get_gvlk(edition.to_str().unwrap_unchecked());
     libc::printf(
@@ -159,7 +162,7 @@ pub unsafe fn set_pk(slmgr: &CStr) {
 
 pub unsafe fn install_license(windir: &CStr, slmgr: &CStr) {
     bail_on_debugger();
-    
+
     libc::printf(c!("[3/4] Installing license...\n"));
     let exit_code = libc::system(
         cformat!(

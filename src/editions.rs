@@ -29,7 +29,6 @@ pub fn get_gvlk(edition: &str) -> &'static str {
         "ProfessionalEducationN" => "YVWGF-BXNMC-HTQYQ-CPQ99-66QFC",
 
         // "EditionID" => "GLVK",
-
         _ => crate::bail!("Unsupported edition"),
     }
 }

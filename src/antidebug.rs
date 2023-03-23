@@ -1,6 +1,14 @@
 use core::arch::asm;
 
-use winapi::{um::{debugapi::{CheckRemoteDebuggerPresent, IsDebuggerPresent}, processthreadsapi::GetCurrentProcess, winnt::{EXCEPTION_POINTERS, LONG}, errhandlingapi::{RemoveVectoredExceptionHandler, AddVectoredExceptionHandler}}, vc::excpt::EXCEPTION_CONTINUE_EXECUTION};
+use winapi::{
+    um::{
+        debugapi::{CheckRemoteDebuggerPresent, IsDebuggerPresent},
+        errhandlingapi::{AddVectoredExceptionHandler, RemoveVectoredExceptionHandler},
+        processthreadsapi::GetCurrentProcess,
+        winnt::{EXCEPTION_POINTERS, LONG},
+    },
+    vc::excpt::EXCEPTION_CONTINUE_EXECUTION,
+};
 
 #[inline(always)]
 fn debugger_present() -> bool {
