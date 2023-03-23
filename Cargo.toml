@@ -1,0 +1,27 @@
+[package]
+name = "quark"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libc = "0.2.0"
+winapi = { version = "0.3.9", features = ["fileapi", "handleapi", "securitybaseapi", "processthreadsapi", "winreg", "synchapi", "debugapi", "errhandlingapi"] }
+wee_alloc = "0.4.5"
+paste = "1.0.12"
+
+[profile.dev]
+panic = "abort"
+opt-level = 1
+lto = true
+
+[profile.release]
+panic = "abort"
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+
+[build-dependencies]
+static_vcruntime = { path = "static_vcruntime" }
