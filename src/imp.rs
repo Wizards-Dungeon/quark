@@ -82,7 +82,7 @@ pub unsafe fn create_ticket() {
         0x40000000,
         0x00000001,
         null_mut(),
-        0x1,
+        0x2,
         0x00000080,
         null_mut(),
     );
