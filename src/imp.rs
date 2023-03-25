@@ -139,18 +139,18 @@ pub unsafe fn set_pk(slmgr: &CStr) {
     bail_on_debugger();
 
     let edition = get_edition();
-    let gvlk = crate::editions::get_gvlk(edition.to_str().unwrap_unchecked());
+    let gvlk = crate::editions::get_gvlk();
     libc::printf(
         c!("[1/4] Using EditionID=%s\n      Using ProductKey=%s\n"),
         edition.as_ptr(),
-        CString::new(gvlk).unwrap_unchecked().as_ptr(),
+        gvlk.as_ptr(),
     );
 
     let exit_code = libc::system(
         cformat!(
             "cscript.exe //nologo {} -ipk {}>nul 2>nul",
             slmgr.to_str().unwrap_unchecked(),
-            gvlk
+            gvlk.to_str().unwrap_unchecked()
         )
         .as_ptr(),
     );

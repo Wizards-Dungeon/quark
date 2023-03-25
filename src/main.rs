@@ -9,19 +9,28 @@
 use core::{
     ffi::CStr,
     hash::{self, Hash, Hasher},
+    ptr::null_mut,
 };
 
 #[macro_use]
 pub extern crate alloc;
 
 mod imp;
+use editions::get_gvlk;
 use imp::*;
 
 mod antidebug;
 mod editions;
 mod v_strings;
 
-use winapi::um::{processthreadsapi::ExitProcess, synchapi::Sleep};
+use winapi::{
+    shared::ntdef::LPCSTR,
+    um::{
+        libloaderapi::{FreeLibrary, GetProcAddress, LoadLibraryA},
+        processthreadsapi::ExitProcess,
+        synchapi::Sleep,
+    },
+};
 
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;

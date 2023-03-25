@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 libc = "0.2.0"
-winapi = { version = "0.3.9", features = ["fileapi", "handleapi", "securitybaseapi", "processthreadsapi", "winreg", "synchapi", "debugapi", "errhandlingapi"] }
+winapi = { version = "0.3.9", features = ["fileapi", "handleapi", "securitybaseapi", "processthreadsapi", "winreg", "synchapi", "debugapi", "errhandlingapi", "libloaderapi"] }
 wee_alloc = "0.4.5"
 paste = "1.0.12"
 
